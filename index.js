@@ -43,26 +43,26 @@ const submitDailyChallenge = async () => {
     await page.click('[id^="popover-trigger"]');
     // Go to Editorial section
     await wait(3000);
-    // await page.waitForNavigation();
-    const dailyChallengeURL = page.url();
-    await page.goto(dailyChallengeURL + "editorial");
+    const [_x, _y, challengePage] = await browser.pages();
+    const dailyChallengeURL = challengePage.url();
+    await challengePage.goto(dailyChallengeURL + "editorial");
     await wait(10000);
     // Click on Copy button in Code playground
-    const frames = page.frames().filter(f => f.url().startsWith('https://leetcode.com/playground/'));
+    const frames = challengePage.frames().filter(f => f.url().startsWith('https://leetcode.com/playground/'));
     const frame = frames[frames.length - 1];
     await frame.waitForSelector('button[class="btn copy-code-btn btn-default"]');
     await frame.click('button[class="btn copy-code-btn btn-default"]');
-    const solutionCode = await page.evaluate(() => navigator.clipboard.readText());
+    const solutionCode = await challengePage.evaluate(() => navigator.clipboard.readText());
     // Paste editorial code in code editor
-    await page.waitForSelector('[class="inputarea monaco-mouse-cursor-text"');
-    await page.focus('[class="inputarea monaco-mouse-cursor-text"');
-    await page.keyboard.down('Control');
-    await page.keyboard.press('A');
-    await page.keyboard.up('Control');
-    await page.keyboard.press('Backspace');
-    await page.keyboard.type(solutionCode);
+    await challengePage.waitForSelector('[class="inputarea monaco-mouse-cursor-text"');
+    await challengePage.focus('[class="inputarea monaco-mouse-cursor-text"');
+    await challengePage.keyboard.down('Control');
+    await challengePage.keyboard.press('A');
+    await challengePage.keyboard.up('Control');
+    await challengePage.keyboard.press('Backspace');
+    await challengePage.keyboard.type(solutionCode);
     // Click on Submit button
-    await page.click('[data-e2e-locator="console-submit-button"]');
+    await challengePage.click('[data-e2e-locator="console-submit-button"]');
     // Wait for code to upload & execute
     await wait(10000);
     await browser.close();
