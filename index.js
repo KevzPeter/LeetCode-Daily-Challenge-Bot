@@ -43,7 +43,7 @@ const submitDailyChallenge = async () => {
     await page.click('[id^="popover-trigger"]');
     // Go to Editorial section
     await wait(3000);
-    const [_x, _y, challengePage] = await browser.pages();
+    const [_aboutBlank, _problemSetPage, challengePage] = await browser.pages();
     const dailyChallengeURL = challengePage.url();
     await challengePage.goto(dailyChallengeURL + "editorial");
     await wait(10000);
@@ -54,13 +54,18 @@ const submitDailyChallenge = async () => {
     await frame.click('button[class="btn copy-code-btn btn-default"]');
     const solutionCode = await challengePage.evaluate(() => navigator.clipboard.readText());
     // Paste editorial code in code editor
-    await challengePage.waitForSelector('[class="inputarea monaco-mouse-cursor-text"');
-    await challengePage.focus('[class="inputarea monaco-mouse-cursor-text"');
+    await challengePage.waitForSelector('[class="inputarea monaco-mouse-cursor-text"]');
+    await challengePage.focus('[class="inputarea monaco-mouse-cursor-text"]');
+    // Select all
     await challengePage.keyboard.down('Control');
     await challengePage.keyboard.press('A');
+    // Delete boilerplate code
     await challengePage.keyboard.up('Control');
     await challengePage.keyboard.press('Backspace');
-    await challengePage.keyboard.type(solutionCode);
+    // Paste copied Solution
+    await challengePage.keyboard.down('Control');
+    await challengePage.keyboard.press('V');
+    await challengePage.keyboard.up('Control');
     // Click on Submit button
     await challengePage.click('[data-e2e-locator="console-submit-button"]');
     // Wait for code to upload & execute
