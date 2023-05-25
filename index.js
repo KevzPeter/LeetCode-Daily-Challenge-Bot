@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
-const username = process.env.LEETCODE_USERNAME;
-const password = process.env.LEETCODE_PASSWORD;
+const { signIn, clickDailyChallengeBtn, wait, goToEditorial, copyCodePlayGround, pasteCode, submitSolution } = require("./utils");
 
 const submitDailyChallenge = async () => {
     const browser = await puppeteer.launch({ headless: false });
@@ -15,65 +14,22 @@ const submitDailyChallenge = async () => {
             readText: () => new Promise(resolve => resolve(clipboardText)),
         }
     })
-    await page.goto('https://leetcode.com/problemset/all');
-    // Click on Sign in Button
-    await page.waitForSelector("#navbar_sign_in_button");
-    await Promise.all([
-        page.click("#navbar_sign_in_button"),
-        page.waitForNavigation()
-    ])
-    // Enter username
-    await page.waitForSelector("#id_login");
-    await page.focus('#id_login');
-    await page.keyboard.type(username);
-    // Enter password
-    await page.waitForSelector("#id_password");
-    await page.focus('#id_password');
-    await page.keyboard.type(password);
-    // Click on Sign in Button
-    await wait(3000);
-    await page.waitForSelector("#signin_btn");
-    await Promise.all([
-        page.click("#signin_btn"),
-        page.waitForNavigation()
-    ])
+    // Sign in using your LeetCode credentials
+    await signIn(page);
     // Click on Daily Challenge button
-    await page.waitForSelector('[id^="popover-trigger"]');
-    await wait(3000);
-    await page.click('[id^="popover-trigger"]');
+    await clickDailyChallengeBtn(page);
     // Go to Editorial section
     await wait(3000);
     const [_aboutBlank, _problemSetPage, challengePage] = await browser.pages();
-    const dailyChallengeURL = challengePage.url();
-    await challengePage.goto(dailyChallengeURL + "editorial");
-    await wait(10000);
+    await goToEditorial(challengePage);
     // Click on Copy button in Code playground
-    const frames = challengePage.frames().filter(f => f.url().startsWith('https://leetcode.com/playground/'));
-    const frame = frames[frames.length - 1];
-    await frame.waitForSelector('button[class="btn copy-code-btn btn-default"]');
-    await frame.click('button[class="btn copy-code-btn btn-default"]');
-    const solutionCode = await challengePage.evaluate(() => navigator.clipboard.readText());
+    await copyCodePlayGround(challengePage);
     // Paste editorial code in code editor
-    await challengePage.waitForSelector('[class="inputarea monaco-mouse-cursor-text"]');
-    await challengePage.focus('[class="inputarea monaco-mouse-cursor-text"]');
-    // Select all
-    await challengePage.keyboard.down('Control');
-    await challengePage.keyboard.press('A');
-    // Delete boilerplate code
-    await challengePage.keyboard.up('Control');
-    await challengePage.keyboard.press('Backspace');
-    // Paste copied Solution
-    await challengePage.keyboard.down('Control');
-    await challengePage.keyboard.press('V');
-    await challengePage.keyboard.up('Control');
-    // Click on Submit button
-    await challengePage.click('[data-e2e-locator="console-submit-button"]');
-    // Wait for code to upload & execute
-    await wait(10000);
+    await pasteCode(challengePage);
+    // Click submit and wait for acceptance
+    await submitSolution(challengePage);
     await browser.close();
 }
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 submitDailyChallenge().then(() => {
     console.log("Submitted Daily Challenge!");
