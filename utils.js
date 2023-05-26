@@ -10,6 +10,7 @@ const signIn = async (page) => {
         page.click("#navbar_sign_in_button"),
         page.waitForNavigation()
     ])
+    console.log(`Signing in as ${username}`);
     // Enter username
     await page.waitForSelector("#id_login");
     await page.focus('#id_login');
@@ -25,6 +26,7 @@ const signIn = async (page) => {
         page.click("#signin_btn"),
         page.waitForNavigation()
     ])
+    console.log(`Signed in successfully!`);
 }
 const clickDailyChallengeBtn = async (page) => {
     await page.waitForSelector('[id^="popover-trigger"]');
@@ -33,6 +35,8 @@ const clickDailyChallengeBtn = async (page) => {
 }
 const goToEditorial = async (challengePage) => {
     const dailyChallengeURL = challengePage.url();
+    const dailyChallengeName = dailyChallengeURL.split("/")[4];
+    console.log(`Today's Daily Challenge:  ${dailyChallengeName}`);
     await challengePage.goto(dailyChallengeURL + "editorial");
     await wait(10000);
 }
@@ -42,7 +46,7 @@ const copyCodePlayGround = async (challengePage) => {
     await frame.waitForSelector('button[class="btn copy-code-btn btn-default"]');
     await frame.click('button[class="btn copy-code-btn btn-default"]');
     const solutionCode = await challengePage.evaluate(() => navigator.clipboard.readText());
-    console.info("Successfully copied solution:\n", solutionCode);
+    console.log("Successfully copied solution:\n", solutionCode);
 }
 const pasteCode = async (challengePage) => {
     await challengePage.waitForSelector('[class="inputarea monaco-mouse-cursor-text"]');
@@ -66,6 +70,7 @@ const paste = async (challengePage) => {
 }
 const submitSolution = async (challengePage) => {
     await challengePage.click('[data-e2e-locator="console-submit-button"]');
+    console.log("Solution submitted");
     // Wait for code to upload & execute
     await wait(10000);
 }

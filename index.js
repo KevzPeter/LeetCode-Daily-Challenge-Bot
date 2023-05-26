@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const { signIn, clickDailyChallengeBtn, wait, goToEditorial, copyCodePlayGround, pasteCode, submitSolution } = require("./utils");
 
 const submitDailyChallenge = async () => {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
     const context = browser.defaultBrowserContext();
     await context.overridePermissions('https://leetcode.com', ['clipboard-read']);
@@ -32,7 +32,8 @@ const submitDailyChallenge = async () => {
 }
 
 submitDailyChallenge().then(() => {
-    console.log("Submitted Daily Challenge!");
+    console.info("Daily Challenge complete! ✅");
+    console.info("You've unlocked 10 leetcoins 🪙");
 }).catch(err => {
     console.log(err);
 });
