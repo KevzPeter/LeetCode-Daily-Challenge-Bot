@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const { signIn, clickDailyChallengeBtn, wait, goToEditorial, copyCodePlayGround, pasteCode, submitSolution } = require("./utils");
 
 const submitDailyChallenge = async () => {
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     const context = browser.defaultBrowserContext();
     await context.overridePermissions('https://leetcode.com', ['clipboard-read']);
