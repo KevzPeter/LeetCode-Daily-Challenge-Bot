@@ -1,5 +1,6 @@
-const username = process.env.LEETCODE_USERNAME;
-const password = process.env.LEETCODE_PASSWORD;
+const credentials = require("./credentials.json");
+const username = process.env.LEETCODE_USERNAME || credentials.USERNAME;
+const password = process.env.LEETCODE_PASSWORD || credentials.PASSWORD;
 
 const signIn = async (page) => {
     await page.goto('https://leetcode.com/problemset/all');
