@@ -72,8 +72,18 @@ The 🤖 bot requires Node.js to run.
 3. Add your LeetCode credentials as environment variables using the following Keys:
     1. LEETCODE_USERNAME
     2. LEETCODE_PASSWORD
+    
+    OR
 
-4. Restart your IDE/Terminal for your environment variables to get loaded successfully.
+    Add your LeetCode credentials within credentials.json file
+    ```
+    {
+      "USERNAME": "enter your username here",
+      "PASSWORD": "enter your password here"
+    }
+    ```
+
+4. Restart your IDE/Terminal for your environment variables to get loaded successfully. (Not required for option 2 in step 3)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -85,8 +95,16 @@ The 🤖 bot requires Node.js to run.
 Run the following command and sit back and relax 🍸
 
 ```sh
-   npm start
+   npm run bot
    ```
+
+If you want to switch languages, add the following flag:
+
+```sh
+   npm run bot --lang=Java
+   ```
+
+Accepted languages [C++, Java, Python3] (default = C++)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
