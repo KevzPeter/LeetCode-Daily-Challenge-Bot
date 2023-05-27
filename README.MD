@@ -113,7 +113,7 @@ Accepted languages [C++, Java, Python3] (default = C++)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Provide option to choose programming language (Currently supports C++ or whatever's available in the first tab in the editorial)
+- [x] Provide option to choose programming language (Currently supports C++ or whatever's available in the first tab in the editorial)
 - [ ] Bypass Recaptcha
 - [ ] Fix MacOS bug
 
