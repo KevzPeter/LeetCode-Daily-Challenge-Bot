@@ -87,22 +87,27 @@ const validateLanguage = (input) => {
     return input;
 }
 const chooseLanguage = async (challengePage, frame, preferredLanguage) => {
-    const [languageBtn] = await frame.$x(`//div[@class='lang-btn-set']//button[contains(., '${preferredLanguage}')]`);
-    if (languageBtn) {
-        await languageBtn.click();
-        await challengePage.waitForSelector('button[id^="headlessui-listbox-button"]');
-        await challengePage.click('button[id^="headlessui-listbox-button"]');
-        await wait(1500);
-        await challengePage.waitForSelector("ul[id^='headlessui-listbox-options'] > li > div > div")
-        const languageOptions = await challengePage.$$(`ul[id^='headlessui-listbox-options'] > li > div > div`);
-        for (const option of languageOptions) {
-            language = await option.evaluate(option => option.textContent);
-            if (language === preferredLanguage) {
-                await option.click();
-            }
-        }
-        await wait(1500);
+    const languageBtns = await frame.$x(`//div[@class='lang-btn-set']//button`);
+    const preferredLanguageBtn = await frame.$x(`//div[@class='lang-btn-set']//button[contains(., '${preferredLanguage}')]`);
+    if (preferredLanguageBtn) {
+        await preferredLanguageBtn.click();
     }
+    else {
+        preferredLanguage = await (await languageBtns[0].getProperty('textContent')).jsonValue();
+        await languageBtns[0].click();
+    }
+    await challengePage.waitForSelector('button[id^="headlessui-listbox-button"]');
+    await challengePage.click('button[id^="headlessui-listbox-button"]');
+    await wait(1500);
+    await challengePage.waitForSelector("ul[id^='headlessui-listbox-options'] > li > div > div")
+    const languageOptions = await challengePage.$$(`ul[id^='headlessui-listbox-options'] > li > div > div`);
+    for (const option of languageOptions) {
+        language = await option.evaluate(option => option.textContent);
+        if (language === preferredLanguage) {
+            await option.click();
+        }
+    }
+    await wait(1500);
 }
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
